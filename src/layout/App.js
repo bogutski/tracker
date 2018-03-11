@@ -11,33 +11,57 @@ class App extends Component {
     };
   }
 
-  addTodo(){
-
+  addTodo() {
     const todoList = this.state.todoList;
     todoList.push(this.state.todoInput);
 
     this.setState({
       todoList,
       todoInput: '',
+      todoInputValid: false,
     });
+  }
+
+  inputChange(v) {
+    let todoInputValid = v.length >= 3 ;
+
+    this.setState({
+      todoInput: v,
+      todoInputValid
+    })
   }
 
   render() {
     return (
-      <div>
+      <div className="container pt-4">
+        <div className="row">
 
-        <input
-          type="text"
-          value={this.state.todoInput}
-          onChange={(e) => this.setState({ todoInput: e.target.value })}
-        />
+          <div className="col-6  col-sm-4 col-md-6 col-lg-4 border">
+            <ul>
+              {this.state.todoList.map(el => <li key={el}>{el}</li>)}
+            </ul>
+          </div>
 
-        <button onClick={() => this.addTodo()}>Add</button>
+          <div className="col-12 col-sm-4 col-md-6 col-lg-4">
+            <div className="input-group">
+              <input
+                className="form-control"
+                type="text"
+                value={this.state.todoInput}
+                onChange={(e) => this.inputChange(e.target.value)}
+              />
+              <div className="input-group-append">
+                <button
+                  disabled={!this.state.todoInputValid}
+                  className="btn btn-outline-primary"
+                  onClick={() => this.addTodo()}>Add
+                </button>
+              </div>
+            </div>
+          </div>
 
-        <ul>
-          {this.state.todoList.map(el => <li key={el}>{el}</li>)}
-        </ul>
 
+        </div>
       </div>
     );
   }
