@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 
 class App extends Component {
-
   constructor(props) {
     super(props);
 
     this.state = {
       todoInput: '',
-      todoList: []
+      todoList: ['Temp', 'New'],
     };
   }
 
@@ -23,12 +22,19 @@ class App extends Component {
   }
 
   inputChange(v) {
-    let todoInputValid = v.length >= 3 ;
+    const todoInputValid = v.trim().length >= 3;
 
     this.setState({
       todoInput: v,
-      todoInputValid
-    })
+      todoInputValid,
+    });
+  }
+
+  deleteItem(todo) {
+    console.log(todo);
+    const todoList = this.state.todoList.filter(el => el !== todo);
+
+    this.setState({ todoList }, () => { console.log(this.state); });
   }
 
   render() {
@@ -38,7 +44,15 @@ class App extends Component {
 
           <div className="col-6  col-sm-4 col-md-6 col-lg-4 border">
             <ul>
-              {this.state.todoList.map(el => <li key={el}>{el}</li>)}
+              {this.state.todoList.map(el =>
+                (
+                  <li key={el}>{el}
+                    <span
+                      className="btn btn-danger btn-sm"
+                      onClick={() => this.deleteItem(el)}
+                    >Delete
+                    </span>
+                  </li>))}
             </ul>
           </div>
 
@@ -48,13 +62,14 @@ class App extends Component {
                 className="form-control"
                 type="text"
                 value={this.state.todoInput}
-                onChange={(e) => this.inputChange(e.target.value)}
+                onChange={e => this.inputChange(e.target.value)}
               />
               <div className="input-group-append">
                 <button
                   disabled={!this.state.todoInputValid}
                   className="btn btn-outline-primary"
-                  onClick={() => this.addTodo()}>Add
+                  onClick={() => this.addTodo()}
+                >Add
                 </button>
               </div>
             </div>
