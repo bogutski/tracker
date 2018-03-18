@@ -6,13 +6,20 @@ class App extends Component {
 
     this.state = {
       todoInput: '',
-      todoList: ['Temp', 'New'],
+      todoList: [{ id: 1, name: 'Temp' }, { id: 2, name: 'New' }],
     };
+  }
+
+  uuidv4() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
   }
 
   addTodo() {
     const todoList = this.state.todoList;
-    todoList.push(this.state.todoInput);
+    todoList.push({
+      id: this.uuidv4(),
+      name: this.state.todoInput,
+    });
 
     this.setState({
       todoList,
@@ -30,11 +37,10 @@ class App extends Component {
     });
   }
 
-  deleteItem(todo) {
-    console.log(todo);
-    const todoList = this.state.todoList.filter(el => el !== todo);
+  deleteItem(id) {
+    const todoList = this.state.todoList.filter(el => el.id !== id);
 
-    this.setState({ todoList }, () => { console.log(this.state); });
+    this.setState({ todoList });
   }
 
   render() {
@@ -46,10 +52,10 @@ class App extends Component {
             <ul>
               {this.state.todoList.map(el =>
                 (
-                  <li key={el}>{el}
+                  <li key={el.id}>{el.name}
                     <span
                       className="btn btn-danger btn-sm"
-                      onClick={() => this.deleteItem(el)}
+                      onClick={() => this.deleteItem(el.id)}
                     >Delete
                     </span>
                   </li>))}
